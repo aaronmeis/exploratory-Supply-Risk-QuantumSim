@@ -1,4 +1,7 @@
-# Aerospace Supply Chain Resilience with Quantum Simulation
+# Supply Risk QuantumSim
+
+> [!NOTE]
+> This is for exploratory learning and understanding and knowledge development with mockup data from Kaggle and NASA.
 
 **Type**: Hybrid AI-quantum disruption engine
 
