@@ -1,0 +1,6 @@
+# Supply-Risk-QuantumSim Requirements
+# networkx
+# numpy
+# scipy
+# pandas
+# matplotlib
