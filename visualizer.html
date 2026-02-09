@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supply Chain Resilience | QuantumSim</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide-react@latest/dist/umd/lucide-react.js"></script>
+</head>
+
+<body class="bg-[#050505] text-amber-500 font-sans">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useMemo } = React;
+        const { Share2, Shield, Zap, AlertCircle, RefreshCw, Cpu } = LucideReact;
+
+        const App = () => {
+            const [disrupted, setDisrupted] = useState(false);
+            const [shieldActive, setShieldActive] = useState(false);
+            const [solving, setSolving] = useState(false);
+
+            const nodes = useMemo(() => [
+                { id: 0, x: 20, y: 50, label: 'Tier 3 Materials' },
+                { id: 1, x: 40, y: 30, label: 'Engine Core' },
+                { id: 2, x: 40, y: 70, label: 'Avionics Node' },
+                { id: 3, x: 60, y: 50, label: 'Assembly Line' },
+                { id: 4, x: 80, y: 50, label: 'The Pad' },
+            ], []);
+
+            const triggerDisruption = () => {
+                setDisrupted(true);
+                setSolving(false);
+            };
+
+            const activateShield = () => {
+                setSolving(true);
+                setTimeout(() => {
+                    setShieldActive(true);
+                    setDisrupted(false);
+                    setSolving(false);
+                }, 1500);
+            };
+
+            const reset = () => {
+                setDisrupted(false);
+                setShieldActive(false);
+                setSolving(false);
+            };
+
+            return (
+                <div className="p-8 h-screen flex flex-col gap-8 bg-black">
+                    <header className="flex justify-between items-center bg-black/50 p-6 rounded-2xl border border-amber-500/10 backdrop-blur-xl">
+                        <div className="flex items-center gap-4">
+                            <div className="bg-amber-500/10 p-3 rounded-xl border border-amber-500/20">
+                                <Cpu className="text-amber-500" size={24} />
+                            </div>
+                            <div>
+                                <h1 className="text-2xl font-black tracking-[0.2em] uppercase">Supply Risk QuantumSim</h1>
+                                <span className="text-[10px] text-amber-700 font-mono italic">Vertical Integration Resilience v4.4</span>
+                            </div>
+                        </div>
+                        <div className="flex gap-4">
+                            <button
+                                onClick={reset}
+                                className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-500 hover:text-white transition-all"
+                            >
+                                <RefreshCw size={18} />
+                            </button>
+                        </div>
+                    </header>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 flex-grow">
+                        <div className="lg:col-span-9 bg-black/40 rounded-3xl border border-amber-500/10 relative overflow-hidden shadow-2xl">
+                            <svg className="absolute inset-0 w-full h-full pointer-events-none">
+                                {/* Connections */}
+                                <line x1="20%" y1="50%" x2="40%" y2="30%" stroke={disrupted ? "#ef4444" : "#10b981"} strokeWidth="2" strokeDasharray={disrupted ? "5 5" : "none"} />
+                                <line x1="20%" y1="50%" x2="40%" y2="70%" stroke={disrupted ? "#ef4444" : "#10b981"} strokeWidth="2" />
+                                <line x1="40%" y1="30%" x2="60%" y2="50%" stroke={disrupted ? "#ef4444" : "#10b981"} strokeWidth="2" />
+                                <line x1="40%" y1="70%" x2="60%" y2="50%" stroke={disrupted ? "#ef4444" : "#10b981"} strokeWidth="2" />
+                                <line x1="60%" y1="50%" x2="80%" y2="50%" stroke={disrupted ? "#ef4444" : "#10b981"} strokeWidth="2" />
+
+                                {disrupted && (
+                                    <circle cx="20%" cy="50%" r="40" fill="none" stroke="#ef4444" strokeWidth="2">
+                                        <animate attributeName="r" from="0" to="80" dur="1.5s" repeatCount="indefinite" />
+                                        <animate attributeName="opacity" from="1" to="0" dur="1.5s" repeatCount="indefinite" />
+                                    </circle>
+                                )}
+                            </svg>
+
+                            {nodes.map(node => (
+                                <div
+                                    key={node.id}
+                                    className="absolute transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2"
+                                    style={{ left: `${node.x}%`, top: `${node.y}%` }}
+                                >
+                                    <div className={`w-8 h-8 rounded-lg border-2 flex items-center justify-center transition-all duration-500 ${disrupted && node.id > 0 ? 'bg-red-500/20 border-red-500' : shieldActive ? 'bg-emerald-500/20 border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.4)]' : 'bg-amber-500/10 border-amber-500/50'}`}>
+                                        <Share2 size={14} className={disrupted && node.id > 0 ? 'text-red-500' : shieldActive ? 'text-emerald-500' : 'text-amber-500'} />
+                                    </div>
+                                    <span className="text-[9px] font-black uppercase text-slate-500 tracking-widest">{node.label}</span>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="lg:col-span-3 space-y-6">
+                            <div className="bg-black/80 p-6 rounded-2xl border border-amber-500/10 shadow-xl space-y-6">
+                                <button
+                                    onClick={triggerDisruption}
+                                    disabled={disrupted || solving}
+                                    className="w-full py-4 rounded-xl bg-red-600/10 border border-red-600/30 text-red-500 text-xs font-black uppercase flex items-center justify-center gap-2 hover:bg-red-600 hover:text-white transition-all disabled:opacity-50"
+                                >
+                                    <AlertCircle size={16} />
+                                    Trigger Shock
+                                </button>
+
+                                <button
+                                    onClick={activateShield}
+                                    disabled={!disrupted || solving}
+                                    className="w-full py-4 rounded-xl bg-emerald-600 border border-emerald-500 text-white text-xs font-black uppercase flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/20 transition-all active:scale-95 disabled:opacity-50"
+                                >
+                                    <Shield size={16} />
+                                    {solving ? 'Quantum Rerouting...' : 'Activate Shield'}
+                                </button>
+                            </div>
+
+                            <div className="p-6 rounded-2xl border border-amber-500/10 bg-gradient-to-br from-amber-500/5 to-emerald-500/5">
+                                <h3 className="text-[10px] font-black text-amber-700 uppercase mb-4 tracking-widest flex items-center gap-2">
+                                    <Zap size={14} /> System Health
+                                </h3>
+                                <div className="space-y-4">
+                                    <div className="flex justify-between items-end">
+                                        <span className="text-[10px] text-slate-600 uppercase font-black">Resilience Index</span>
+                                        <span className={`text-2xl font-mono font-black ${disrupted ? 'text-red-500' : 'text-emerald-500'}`}>{disrupted ? '12%' : shieldActive ? '99%' : '84%'}</span>
+                                    </div>
+                                    <div className="h-1 bg-slate-900 rounded-full overflow-hidden">
+                                        <div className={`h-full transition-all duration-1000 ${disrupted ? 'bg-red-500 w-[12%]' : 'bg-emerald-500 w-[99%]'}`} />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+
+</html>

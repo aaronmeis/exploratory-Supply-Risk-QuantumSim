@@ -6,7 +6,11 @@
 
 **First Principles**: Networks snap at weakest link. Percolation shows collapse thresholds—build resilience from node physics.
 
-**Approach**: Use Monte Carlo + QAOA-style heuristics to minimize downtime. Tie to Starship's vertical integration reducing risks.
+**Approach**: Simulate engine line supplier failures. Model the resilience benefit from vertical integration. Explain real-time rerouting with QAOA.
+
+## Interactive Visualizer
+🚀 **[Launch Resilience Node Map](visualizer.html)**
+Explore the shock percolation and "Vertical Integration Shield" in real-time.
 
 **Context**: Great for showing quantum's edge on NP-hard problems.
 
