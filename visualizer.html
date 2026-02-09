@@ -5,18 +5,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Supply Chain Resilience | QuantumSim</title>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <!-- Proven Script Configuration (Iframe Safe) -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://unpkg.com/lucide-react@latest/dist/umd/lucide-react.js"></script>
+    <style>
+        body,
+        html,
+        #root {
+            height: 100%;
+            margin: 0;
+            background: #050505;
+            color: #f59e0b;
+            /* amber-500 */
+        }
+
+        #fallback-check {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: monospace;
+            font-size: 10px;
+            color: #475569;
+            pointer-events: none;
+        }
+    </style>
 </head>
 
-<body class="bg-[#050505] text-amber-500 font-sans">
+<body class="bg-black">
+    <div id="fallback-check">INITIALIZING RESILIENCE ENGINE...</div>
     <div id="root"></div>
 
-    <script type="text/babel">
+    <script type="text/babel" data-presets="react">
         const { useState, useEffect, useRef, useMemo } = React;
         const { Share2, Shield, Zap, AlertCircle, RefreshCw, Cpu } = LucideReact;
 
@@ -24,6 +48,12 @@
             const [disrupted, setDisrupted] = useState(false);
             const [shieldActive, setShieldActive] = useState(false);
             const [solving, setSolving] = useState(false);
+
+            // Clear fallback on mount
+            useEffect(() => {
+                const fallback = document.getElementById('fallback-check');
+                if (fallback) fallback.style.display = 'none';
+            }, []);
 
             const nodes = useMemo(() => [
                 { id: 0, x: 20, y: 50, label: 'Tier 3 Materials' },
@@ -54,8 +84,8 @@
             };
 
             return (
-                <div className="p-8 h-screen flex flex-col gap-8 bg-black">
-                    <header className="flex justify-between items-center bg-black/50 p-6 rounded-2xl border border-amber-500/10 backdrop-blur-xl">
+                <div className="p-8 h-full min-h-screen flex flex-col gap-8 bg-black">
+                    <header className="flex justify-between items-center bg-black/50 p-6 rounded-2xl border border-amber-500/10 backdrop-blur-xl shrink-0">
                         <div className="flex items-center gap-4">
                             <div className="bg-amber-500/10 p-3 rounded-xl border border-amber-500/20">
                                 <Cpu className="text-amber-500" size={24} />
@@ -75,7 +105,7 @@
                         </div>
                     </header>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 flex-grow">
+                    <main className="grid grid-cols-1 lg:grid-cols-12 gap-8 flex-grow overflow-hidden min-h-0">
                         <div className="lg:col-span-9 bg-black/40 rounded-3xl border border-amber-500/10 relative overflow-hidden shadow-2xl">
                             <svg className="absolute inset-0 w-full h-full pointer-events-none">
                                 {/* Connections */}
@@ -107,7 +137,7 @@
                             ))}
                         </div>
 
-                        <div className="lg:col-span-3 space-y-6">
+                        <div className="lg:col-span-3 space-y-6 overflow-y-auto pr-1">
                             <div className="bg-black/80 p-6 rounded-2xl border border-amber-500/10 shadow-xl space-y-6">
                                 <button
                                     onClick={triggerDisruption}
@@ -137,13 +167,13 @@
                                         <span className="text-[10px] text-slate-600 uppercase font-black">Resilience Index</span>
                                         <span className={`text-2xl font-mono font-black ${disrupted ? 'text-red-500' : 'text-emerald-500'}`}>{disrupted ? '12%' : shieldActive ? '99%' : '84%'}</span>
                                     </div>
-                                    <div className="h-1 bg-slate-900 rounded-full overflow-hidden">
+                                    <div className="h-1 bg-slate-950 rounded-full overflow-hidden border border-white/5">
                                         <div className={`h-full transition-all duration-1000 ${disrupted ? 'bg-red-500 w-[12%]' : 'bg-emerald-500 w-[99%]'}`} />
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </main>
                 </div>
             );
         };
